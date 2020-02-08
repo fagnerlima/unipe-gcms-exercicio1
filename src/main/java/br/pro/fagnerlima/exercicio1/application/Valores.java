@@ -25,6 +25,10 @@ public class Valores implements ValoresITF {
 
     @Override
     public int del(int i) {
+        if (size() == 0 || valores[i] <= 0) {
+            return -1;
+        }
+
         int v = valores[i];
         valores[i] = 0;
 

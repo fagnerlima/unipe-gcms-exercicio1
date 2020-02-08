@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Exercício 2" default="main" basedir=".">
+  <description>Primeiro build com Ant</description>
+
+  <property name="source.dir" location="src" />
+  <property name="build.dir" location="bin" />
+  <property name="docs.dir" location="docs" />
+
+  <target name="clean" description="Clean files and directories">
+    <delete dir="${build.dir}" />
+    <delete dir="${docs.dir}" />
+    <delete>
+      <fileset defaultexcludes="no" dir="${source.dir}" includes="**/*~" />
+    </delete>
+  </target>
+
+  <target name="init" description="Init directories">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${docs.dir}" />
+  </target>
+
+  <target name="compile" description="Compile project">
+    <javac srcdir="${source.dir}" destdir="${build.dir}" />
+  </target>
+
+  <target name="main" description="Main target" depends="clean, init, compile">
+  </target>
+</project>

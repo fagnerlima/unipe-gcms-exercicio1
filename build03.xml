@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Exercicio 4" default="main" basedir=".">
+  <description>Exercicio 4</description>
+
+  <property name="source.dir" location="src/main/java" />
+  <property name="test.dir" location="src/test/java" />
+  <property name="build-main.dir" location="bin/main" />
+  <property name="build-test.dir" location="bin/test" />
+  <property name="testreport.dir" location="testreport" />
+  <property name="docs.dir" location="docs" />
+  <property name="jar.dir" location="jar" />
+
+  <path id="test.classpath">
+    <pathelement path="${build-main.dir}" />
+    <pathelement path="${build-test.dir}" />
+    <fileset dir="lib" includes="*.jar" />
+  </path>
+
+  <target name="clean" description="Clean files and directories">
+    <delete dir="${build-main.dir}" />
+    <delete dir="${build-test.dir}" />
+    <delete dir="${docs.dir}" />
+    <delete dir="${jar.dir}" />
+    <delete dir="${testreport.dir}" />
+    <delete>
+      <fileset defaultexcludes="no" dir="${source.dir}" includes="**/*~" />
+    </delete>
+  </target>
+
+  <target name="init" description="Init directories">
+    <mkdir dir="${build-main.dir}" />
+    <mkdir dir="${build-test.dir}" />
+    <mkdir dir="${docs.dir}" />
+    <mkdir dir="${jar.dir}" />
+    <mkdir dir="${testreport.dir}" />
+  </target>
+
+  <target name="compile" description="Compile project">
+    <javac srcdir="${source.dir}" destdir="${build-main.dir}" includeantruntime="false" />
+    <javac srcdir="${test.dir}" destdir="${build-test.dir}" classpathref="test.classpath" includeantruntime="false" />
+  </target>
+
+  <target name="test.junit.launcher">
+    <junitlauncher haltOnFailure="true" printSummary="true">
+      <classpath refid="test.classpath"/>
+      <testclasses outputdir="${testreport.dir}">
+        <fileset dir="${build-test.dir}">
+          <include name="**/*Test.class"/>
+        </fileset>
+        <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+        <listener type="legacy-plain" sendSysOut="true" />
+      </testclasses>
+    </junitlauncher>
+  </target>
+
+  <target name="test.console.launcher">
+    <java classpathref="test.classpath" classname="org.junit.platform.console.ConsoleLauncher" fork="true" failonerror="true">
+      <arg value="--scan-classpath"/>
+      <arg line="--reports-dir ${testreport.dir}"/>
+    </java>
+    <junitreport todir="${testreport.dir}">
+      <fileset dir="${testreport.dir}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${testreport.dir}/html"/>
+    </junitreport>
+  </target>
+
+  <target name="test" depends="test.junit.launcher, test.console.launcher" />
+
+  <target name="docs" description="Generate javadoc">
+    <javadoc sourcepath="${source.dir}" destdir="${docs.dir}" />
+  </target>
+
+  <target name="package" description="Package jar">
+    <jar basedir="${build-main.dir}" destfile="${jar.dir}/app.jar" />
+  </target>
+
+  <target name="main" description="Main target" depends="clean, init, compile, test, docs, package">
+  </target>
+</project>

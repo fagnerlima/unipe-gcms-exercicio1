@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Exercício 2" default="main" basedir=".">
-  <description>Primeiro build com Ant</description>
+<project name="Exercicio 3" default="main" basedir=".">
+  <description>Exercicio 3</description>
 
   <property name="source.dir" location="src/main/java" />
   <property name="build.dir" location="bin" />
   <property name="docs.dir" location="docs" />
+  <property name="jar.dir" location="jar" />
 
   <target name="clean" description="Clean files and directories">
     <delete dir="${build.dir}" />
     <delete dir="${docs.dir}" />
+    <delete dir="${jar.dir}" />
     <delete>
       <fileset defaultexcludes="no" dir="${source.dir}" includes="**/*~" />
     </delete>
@@ -17,6 +19,7 @@
   <target name="init" description="Init directories">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${docs.dir}" />
+    <mkdir dir="${jar.dir}" />
   </target>
 
   <target name="compile" description="Compile project">
@@ -27,6 +30,10 @@
     <javadoc sourcepath="${source.dir}" destdir="${docs.dir}" />
   </target>
 
-  <target name="main" description="Main target" depends="clean, init, compile, docs">
+  <target name="package" description="Package jar">
+    <jar basedir="${build.dir}" destfile="${jar.dir}/app.jar" />
+  </target>
+
+  <target name="main" description="Main target" depends="clean, init, compile, docs, package">
   </target>
 </project>
